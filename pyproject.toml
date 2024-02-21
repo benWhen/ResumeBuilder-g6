@@ -6,6 +6,7 @@ version = "0.1.0"
 [tool.poetry.dependencies]
 Django = "^5.0"
 python = "^3.10"
+git-python = "^1.0.3"
 [tool.poetry.dev-dependencies]
 
 [tool.pyright]
