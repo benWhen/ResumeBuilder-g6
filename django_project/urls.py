@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from . import views
+from ResumeBuilderApp import views
 
 urlpatterns = [
+    path('', views.user_login, name='home'),
     path('admin/', admin.site.urls),
-    path('login/', views.login_view, name='login'),
-    path('register/', views.register_view, name='register'),
+    path('login/', views.user_login, name='login'),
+    path('register/', views.register, name='register'),
 ]

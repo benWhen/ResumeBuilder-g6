@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-4ju2n@$f9d0c=h)_g0lbb%k9&@rf(xa$d$g$&5ri$uf)*gev^4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".replit.dev", ".replit.app", '127.0.0.1']
+ALLOWED_HOSTS = [".replit.dev", ".replit.app", '127.0.0.1', 'e1b74421-d0c8-4b8d-9ebd-99333cab4088-00-2wn3onv91c8hm.picard.repl.co']
 CSRF_TRUSTED_ORIGINS = ["https://*.replit.dev", "https://*.replit.app"]
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ResumeBuilderApp',
 ]
 
 MIDDLEWARE = [
