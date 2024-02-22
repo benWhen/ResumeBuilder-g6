@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% comment %}
+{% endcomment %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col text-center">
+                {% comment %}
+                <h2>Welcome, {{ user }}</h2>
+                {% endcomment %}
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action">Create new resume</a>
+                    <a href="#" class="list-group-item list-group-item-action">Import resume</a>
+                    <a href="#" class="list-group-item list-group-item-action">Export resume</a>
+                    <a href="#" class="list-group-item list-group-item-action">Delete resume</a>
+                </div>
+            </div>
+        {% comment %}
+            <div class="col-md-9">
+                <div class="row">
+                    <!-- Loop through users resumes to display them here -->
+                    {% for resume in user.resumes %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ resume.title }}</h5>
+                                    <p class="card-text">Resume details</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endcomment %}
+        </div>
+    </div>
+{% endblock %}
