@@ -112,8 +112,34 @@ class TestMyUser(TestCase):
             MyUser.objects.create_user(username='testuser2',
                                        email='test2@example.com')
 
+    def test_create_user_with_empty_username(self):
+        with self.assertRaises(ValidationError) as context:
+            MyUser.objects.create_user(username='',
+                                       email='test4@example.com',
+                                       password='testpassword4')
+        self.assertIn('username', context.exception.message_dict)
+        self.assertIn('This field cannot be blank.', context.exception.message_dict['username'])
 
+    def test_create_user_with_empty_email(self):
+        with self.assertRaises(ValidationError) as context:
+            MyUser.objects.create_user(username='testuser',
+                                       email='',
+                                       password='testpassword4')
+        self.assertIn('email', context.exception.message_dict)
+        self.assertIn('This field cannot be blank.', context.exception.message_dict['email'])
 
+    def test_create_user_with_short_password(self):
+        with self.assertRaises(ValidationError):
+            MyUser.objects.create_user(username='testuser5',
+                                       email='test5@example.com',
+                                       password='test')
+
+    def test_create_user_with_invalid_phone_number(self):
+        with self.assertRaises(ValueError):
+            MyUser.objects.create_user(username='testuser',
+                                       email='test@example.com',
+                                       password='testpassword',
+                                       phone_number='123')
 
 class TestModels(TestCase):
     def setUp(self):
@@ -162,6 +188,19 @@ class TestModels(TestCase):
             title='Certification X',
             description='Received Certification X for completion of course'
         )
+        self.user.skills.add(self.skill)
+        self.user.languages.add(self.language)
+        self.user.interests.add(self.interest)
+
+
+    def test_user_skills(self):
+        self.assertIn(self.skill, self.user.skills.all())
+
+    def test_user_languages(self):
+        self.assertIn(self.language, self.user.languages.all())
+
+    def test_user_interests(self):
+        self.assertIn(self.interest, self.user.interests.all())
 
     def test_skill_creation(self):
         self.assertEqual(self.skill.name, 'Programming')

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <main>
+            <div class="d-flex justify-content-between mb-3">
+                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
+            </div>
+            <h1 class="display-4 text-center mb-5">Welcome to Resume Builder</h1>
+            <p class="lead text-center">Create a professional resume with ease</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="text-center">Build Your Resume</h2>
+                    <p class="text-center">Create your resume in minutes using our easy-to-use resume builder.</p>
+                    <a href="#" class="btn btn-primary d-block mx-auto">Get Started</a>
+                </div>
+                <div class="col-md-6">
+                    <h2 class="text-center">Browse Templates</h2>
+                    <p class="text-center">Explore our collection of professionally designed resume templates.</p>
+                    <a href="#" class="btn btn-secondary d-block mx-auto">View Templates</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+
+

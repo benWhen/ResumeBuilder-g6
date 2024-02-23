@@ -4,9 +4,9 @@ from .models import MyUser
 class MyUserCreationForm(UserCreationForm):
     class Meta:
         model = MyUser
-        fields = ('email',)  # Adjust fields as needed
+        fields = ('email','password','username')  # Adjust fields as needed
 
 class MyAuthenticationForm(AuthenticationForm):
     class Meta:
         model = MyUser
-        fields = ('username', 'password')
+        fields = ('email', 'password')

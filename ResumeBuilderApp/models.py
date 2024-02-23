@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import BaseUserManager
+from .utilities import validate_phone_number
 
 class Skill(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -16,6 +16,8 @@ class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if password is None:
             raise ValueError("Password must be provided.")
+        if len(password) < 8:
+            raise ValidationError("Password must be at least 8 characters long.")
         if email is None:
             raise ValueError("email must be provided.")
         if self.model.objects.filter(email=email).exists():
@@ -23,6 +25,10 @@ class MyUserManager(BaseUserManager):
         username = extra_fields.get('username')
         if username and self.model.objects.filter(username=username).exists():
             raise ValidationError("Username already exists.")
+        phone_number = extra_fields.get('phone_number')
+        if phone_number is not None:
+            if not validate_phone_number(phone_number):
+                raise ValueError("Invalid phone number")
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.full_clean()
