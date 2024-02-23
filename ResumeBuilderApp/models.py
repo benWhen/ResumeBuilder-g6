@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password
@@ -13,9 +14,18 @@ class Interests(models.Model):
     interest = models.CharField(max_length=100, unique=True)
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
-        # Create and return a new user instance
+        if password is None:
+            raise ValueError("Password must be provided.")
+        if email is None:
+            raise ValueError("email must be provided.")
+        if self.model.objects.filter(email=email).exists():
+            raise ValidationError("Email address already exists.")
+        username = extra_fields.get('username')
+        if username and self.model.objects.filter(username=username).exists():
+            raise ValidationError("Username already exists.")
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
+        user.full_clean()
         user.save(using=self._db)
         return user
 
@@ -33,14 +43,14 @@ class MyUserManager(BaseUserManager):
 
 class MyUser(AbstractUser):
     username = models.CharField(max_length=64, blank=False, null=False, unique=True)
-    first_name = models.CharField(max_length=100, blank=False, null=False)
-    last_name = models.CharField(max_length=100, blank=False, null=False)
+    first_name = models.CharField(max_length=100, blank=True, null=False)
+    last_name = models.CharField(max_length=100, blank=True, null=False)
     email = models.EmailField(max_length=254, blank=False, null=False, unique=True)
     password = models.CharField(max_length=128, blank=False, null=False)
     is_staff = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=20,blank=True, null=True, unique=True)
-    address = models.CharField(max_length=255)
-    linkedin_url = models.URLField(max_length=200)
+    address = models.CharField(max_length=255, blank=True)
+    linkedin_url = models.URLField(max_length=200, blank=True)
     bio = models.TextField(blank=True)
     skills = models.ManyToManyField(Skill) #Makes it so that skills can be added to database;therefore, usable for all
     languages = models.ManyToManyField(Languages)
@@ -59,16 +69,6 @@ class MyUser(AbstractUser):
 
     def __str__(self):
         return self.username
-    """
-    Checks if instance is being created (i.e. not updated)
-    If instance is new, then hashes password.Otherwise 
-    password is not hashed. In either instance, method calls 
-    parent's save()
-    """
-    def save(self, *args, **kwargs):
-        if self.pk is None:
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
 
     objects = MyUserManager()
 
