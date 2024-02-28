@@ -3,23 +3,37 @@
 {% block content %}
     <div class="row justify-content-center mt-5">
         <main class="form-signin w-100 m-auto">
-            <form method="post">
+            <form method="POST">
                 {% csrf_token %}
                 <h2 class="text-center mb-4">Register</h2>
                 <div class="form-floating">
-                    <input id="inputUsername" class="form-control" type="text" name="username" placeholder="Username">
-                    <label for="inputUsername">Username</label>
+                    {{ form.username }}
+                    <label>username</label>
                 </div>
                 <div class="form-floating">
-                    <input id="inputEmail" class="form-control" type="email" name="email" placeholder="name@example.com">
-                    <label for="inputEmail">Email address</label>
+                    {{ form.email }}
+                    <label>email</label>
                 </div>
                 <div class="form-floating">
-                    <input id="inputPassword" class="form-control" type="password" name="password" placeholder="Password">
-                    <label for="inputPassword">Password</label>
+                    {{ form.password1 }}
+                    <label>Enter password</label>
+                </div>
+                <div class="form-floating">
+                    {{ form.password2 }}
+                    <label>Re-enter password</label>
                 </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
             </form>
         </main>
     </div>
+       <script>
+        var form_fields = document.getElementsByTagName('input')
+        form_fields[1].placeholder='Username..';
+        form_fields[2].placeholder='Email..';
+        form_fields[3].placeholder='Enter password..';
+        form_fields[4].placeholder='Re-enter password..';
+        for (var field in form_fields){
+            form_fields[field].className += ' form-control'
+        }
+    </script>
 {% endblock %}
