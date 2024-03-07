@@ -14,7 +14,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=40, blank=True, null=True)
     # more fields to add - TBD
 
+
     # fields below are admin fields from the auth.user class
+
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,

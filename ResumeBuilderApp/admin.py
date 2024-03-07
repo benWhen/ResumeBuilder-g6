@@ -35,3 +35,4 @@ class UserAdmin(UA):
     list_display = ("email", "first_name", "last_name", "is_staff")
     ordering = ("-is_staff",)
     readonly_fields = ('last_login', 'date_joined')
+
