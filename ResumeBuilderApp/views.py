@@ -23,8 +23,8 @@ def user_login(request):
         else:
             messages.info(request, 'Username or password is incorrect.')
             return render(request, 'pages/login.html')
-    context = {}
-    return render(request, 'pages/login.html', context)
+    # GET request should render login page without any context data
+    return render(request, 'pages/login.html')
 
 
 def register(request):
@@ -33,13 +33,13 @@ def register(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
-            user = form.cleaned_data.get('username')
+            user = form.cleaned_data.get('email')
             messages.success(request, 'Account was created for ' + user)
             return redirect('login')
     context = {'form': form}
     return render(request, 'pages/register.html', context)
 
 
-def logoutUser(request):
+def user_logout(request):
     logout(request)
     return redirect('login')
