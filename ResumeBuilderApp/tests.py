@@ -1,233 +1,93 @@
-from django.core.exceptions import ValidationError
-from django.test import TestCase
-from django.contrib.auth import get_user_model
-from .models import Skill, Languages, Interests, MyUser, Education, WorkExperience, Projects, CertificationsAndAwards
-from datetime import date
-from django.contrib.auth.hashers import check_password
-class TestMyUser(TestCase):
+from django.core.exceptions import ObjectDoesNotExist
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from django.urls import reverse
+
+class ViewTests(TestCase):
     def setUp(self):
-        self.skill = Skill.objects.create(name='Programming')
-        self.language = Languages.objects.create(language='Python')
-        self.interest = Interests.objects.create(interest='Reading')
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testPassword!123')
 
-    def test_create_user(self):
-        user = MyUser.objects.create_user(username='testuser',
-                                                    first_name='John',
-                                                    last_name='Doe',
-                                                    email='test@example.com',
-                                                    password='testpassword',
-                                                    phone_number='1234567890',
-                                                    address='123 Test St',
-                                                    linkedin_url='http://linkedin.com/testuser',
-                                                    bio='Test bio')
-        self.assertEqual(user.username, 'testuser')
-        self.assertEqual(user.first_name, 'John')
-        self.assertEqual(user.last_name, 'Doe')
-        self.assertEqual(user.email, 'test@example.com')
-        self.assertTrue(check_password('testpassword', user.password))
-        self.assertEqual(user.phone_number, '1234567890')
-        self.assertEqual(user.address, '123 Test St')
-        self.assertEqual(user.linkedin_url, 'http://linkedin.com/testuser')
-        self.assertEqual(user.bio, 'Test bio')
-        self.assertFalse(user.is_staff)
-        self.assertFalse(user.is_superuser)
-        self.assertTrue(user.is_active)
+    def test_home_view(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'pages/home.html')
 
-    def test_create_superuser(self):
-        # Test creating a superuser
-        User = get_user_model()
-        superuser = User.objects.create_superuser(
-            username='admin',
-            email='admin@example.com',
-            password='adminpassword'
-        )
+    def test_dashboard_view(self):
+        response = self.client.get(reverse('dashboard'))
+        self.assertRedirects(response, reverse('login') + '?next=%2Fdashboard%2F')  # Check if the user is redirected to the login page
 
-        self.assertEqual(superuser.username, 'admin')
-        self.assertEqual(superuser.email, 'admin@example.com')
-        self.assertTrue(check_password('adminpassword', superuser.password))
-        self.assertTrue(superuser.is_staff)
-        self.assertTrue(superuser.is_superuser)
-        self.assertTrue(superuser.is_active)
+        self.client.login(username='testuser', password='testPassword!123')
+        response = self.client.get(reverse('dashboard'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'pages/dashboard.html')
+    def test_user_login_view(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'pages/login.html')
 
-    def test_create_education(self):
-        user = MyUser.objects.create_user(username='testuser',
-                                          email='test@example.com',
-                                          password='testpassword')
-        education = Education.objects.create(user=user,
-                                             degree_obtained='Bachelor of Science',
-                                             institution_attended='University of Test',
-                                             graduation_date=date.today(),
-                                             gpa=3.5,
-                                             relevant_coursework='Computer Science, Mathematics')
-        self.assertEqual(education.user, user)
-        self.assertEqual(education.degree_obtained, 'Bachelor of Science')
-        self.assertEqual(education.institution_attended, 'University of Test')
-        self.assertEqual(education.graduation_date, date.today())
-        self.assertEqual(education.gpa, 3.5)
-        self.assertEqual(education.relevant_coursework, 'Computer Science, Mathematics')
+    def test_login_valid_data(self):
+        login_data = {'username': 'testuser', 'password': 'testPassword!123'}
+        response = self.client.post(reverse('login'), login_data)
+        self.assertRedirects(response, reverse('dashboard'))
+        self.assertTrue('_auth_user_id' in self.client.session)
 
-    def test_create_work_experience(self):
-        user = MyUser.objects.create_user(username='testuser',
-                                          email='test@example.com',
-                                          password='testpassword')
-        work_experience = WorkExperience.objects.create(user=user,
-                                                        title='Software Engineer',
-                                                        employer='Tech Company',
-                                                        duties='Developing software applications',
-                                                        start_date=date(2020, 1, 1),
-                                                        end_date=date(2021, 1, 1))
-        self.assertEqual(work_experience.user, user)
-        self.assertEqual(work_experience.title, 'Software Engineer')
-        self.assertEqual(work_experience.employer, 'Tech Company')
-        self.assertEqual(work_experience.duties, 'Developing software applications')
-        self.assertEqual(work_experience.start_date, date(2020, 1, 1))
-        self.assertEqual(work_experience.end_date, date(2021, 1, 1))
+    def test_login_invalid_password(self):
+        login_data = {'username': 'testuser', 'password': 'invalidpassword'}
+        response = self.client.post(reverse('login'), login_data)
+        self.assertContains(response, 'Username or password is incorrect.')
 
-    def test_create_user_with_existing_email(self):
-        MyUser.objects.create_user(username='testuser1',
-                                   email='test@example.com',
-                                   password='testpassword3')
-        with self.assertRaises(ValidationError):
-            MyUser.objects.create_user(username='testuser2',
-                                       email='test@example.com',
-                                       password='testpassword2')
+    def test_login_invalid_user(self):
+        login_data = {'username': 'invaliduser', 'password': 'testPassword!123'}
+        response = self.client.post(reverse('login'), login_data)
+        self.assertContains(response, 'Username or password is incorrect.')
+        with self.assertRaises(ObjectDoesNotExist):
+            User.objects.get(username='invaliduser')
 
-    def test_create_user_with_existing_username(self):
-        MyUser.objects.create_user(username='testuser1',
-                                   email='test@example.com',
-                                   password='testpassword3')
-        with self.assertRaises(ValidationError):
-            MyUser.objects.create_user(username='testuser1',
-                                       email='test2@example.com',
-                                       password='testpassword2')
+    def test_empty_login_credentials(self):
+        login_data = {'username': '', 'password': ''}
+        response = self.client.post(reverse('login'), login_data)
+        self.assertContains(response, 'Username or password is incorrect.')
 
-    def test_create_user_with_invalid_email(self):
-        with self.assertRaises(ValidationError):
-            MyUser.objects.create_user(username='testuser2',
-                                       email='invalidemail',
-                                       password='testpassword2')
+    def test_register_view(self):
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'pages/register.html')
 
-    def test_create_user_without_password(self):
-        with self.assertRaises(ValueError):
-            MyUser.objects.create_user(username='testuser2',
-                                       email='test2@example.com')
+    def test_register_valid_data(self):
+        register_data = {'username': 'newuser', 'password1': 'SecurePassword!123', 'password2': 'SecurePassword!123'}
+        response = self.client.post(reverse('register'), register_data)
+        self.assertRedirects(response, reverse('login'))
+        user_exists = User.objects.filter(username='newuser').exists()
+        self.assertTrue(user_exists, "User should be created with valid data")
 
-    def test_create_user_with_empty_username(self):
-        with self.assertRaises(ValidationError) as context:
-            MyUser.objects.create_user(username='',
-                                       email='test4@example.com',
-                                       password='testpassword4')
-        self.assertIn('username', context.exception.message_dict)
-        self.assertIn('This field cannot be blank.', context.exception.message_dict['username'])
+    def test_max_length_username(self):
+        long_username = 'a' * 151
+        register_data = {'username': long_username, 'password1': 'ValidPassword!123', 'password2': 'ValidPassword!123'}
+        response = self.client.post(reverse('register'), register_data, follow=True)
+        self.assertContains(response, 'Ensure this value has at most 150 characters (it has 151).')
+        with self.assertRaises(ObjectDoesNotExist):
+            User.objects.get(username=long_username)
 
-    def test_create_user_with_empty_email(self):
-        with self.assertRaises(ValidationError) as context:
-            MyUser.objects.create_user(username='testuser',
-                                       email='',
-                                       password='testpassword4')
-        self.assertIn('email', context.exception.message_dict)
-        self.assertIn('This field cannot be blank.', context.exception.message_dict['email'])
+    def test_special_chars_in_username(self):
+        username = 'user!@#$'
+        register_data = {'username': username, 'password1': 'ValidPassword!123', 'password2': 'ValidPassword!123'}
+        response = self.client.post(reverse('register'), register_data)
+        self.assertContains(response, 'Username can only contain letters, numbers, and underscores')
+        with self.assertRaises(ObjectDoesNotExist):
+            User.objects.get(username=username)
 
-    def test_create_user_with_short_password(self):
-        with self.assertRaises(ValidationError):
-            MyUser.objects.create_user(username='testuser5',
-                                       email='test5@example.com',
-                                       password='test')
+    def test_register_invalid_mismatching_password(self):
+        register_data = {'username': 'newuser1', 'password1': 'SecurePassword!123', 'password2': 'SecurePassword'}
+        response = self.client.post(reverse('register'), register_data)
+        self.assertContains(response, 'The two password fields didn’t match.')
+        with self.assertRaises(ObjectDoesNotExist):
+            User.objects.get(username='newuser1')
 
-    def test_create_user_with_invalid_phone_number(self):
-        with self.assertRaises(ValueError):
-            MyUser.objects.create_user(username='testuser',
-                                       email='test@example.com',
-                                       password='testpassword',
-                                       phone_number='123')
+    def test_logout(self):
+        self.client.login(username='testuser', password='testPassword!123')
+        self.assertTrue('_auth_user_id' in self.client.session)
+        response = self.client.get(reverse('logout'))
+        self.assertRedirects(response, reverse('login'))
+        self.assertFalse('_auth_user_id' in self.client.session)
 
-class TestModels(TestCase):
-    def setUp(self):
-        self.user = MyUser.objects.create_user(
-            username='testuser',
-            first_name='John',
-            last_name='Doe',
-            email='test@example.com',
-            password='testpassword',
-            phone_number='1234567890',
-            address='123 Test St',
-            linkedin_url='http://linkedin.com/testuser',
-            bio='Test bio'
-        )
-
-        self.skill = Skill.objects.create(name='Programming')
-        self.language = Languages.objects.create(language='Python')
-        self.interest = Interests.objects.create(interest='Reading')
-
-        self.education = Education.objects.create(
-            user=self.user,
-            degree_obtained='Bachelor of Science',
-            institution_attended='University of Test',
-            graduation_date=date(2020, 5, 15),
-            gpa=3.5,
-            relevant_coursework='Computer Science'
-        )
-
-        self.work_experience = WorkExperience.objects.create(
-            user=self.user,
-            title='Software Engineer',
-            employer='Test Company',
-            duties='Developed web applications',
-            start_date=date(2020, 6, 1),
-            end_date=date(2021, 6, 1)
-        )
-
-        self.project = Projects.objects.create(
-            user=self.user,
-            project_name='Project X',
-            description='Developed a web application for project management'
-        )
-
-        self.certification = CertificationsAndAwards.objects.create(
-            user=self.user,
-            title='Certification X',
-            description='Received Certification X for completion of course'
-        )
-        self.user.skills.add(self.skill)
-        self.user.languages.add(self.language)
-        self.user.interests.add(self.interest)
-
-
-    def test_user_skills(self):
-        self.assertIn(self.skill, self.user.skills.all())
-
-    def test_user_languages(self):
-        self.assertIn(self.language, self.user.languages.all())
-
-    def test_user_interests(self):
-        self.assertIn(self.interest, self.user.interests.all())
-
-    def test_skill_creation(self):
-        self.assertEqual(self.skill.name, 'Programming')
-
-    def test_language_creation(self):
-        self.assertEqual(self.language.language, 'Python')
-
-    def test_interest_creation(self):
-        self.assertEqual(self.interest.interest, 'Reading')
-
-    def test_education_creation(self):
-        self.assertEqual(self.education.user, self.user)
-        self.assertEqual(self.education.degree_obtained, 'Bachelor of Science')
-
-    def test_work_experience_creation(self):
-        self.assertEqual(self.work_experience.user, self.user)
-        self.assertEqual(self.work_experience.title, 'Software Engineer')
-
-    def test_project_creation(self):
-        self.assertEqual(self.project.user, self.user)
-        self.assertEqual(self.project.project_name, 'Project X')
-
-    def test_certification_creation(self):
-        self.assertEqual(self.certification.user, self.user)
-        self.assertEqual(self.certification.title, 'Certification X')
-
-
-
-
-# Create your tests here.
