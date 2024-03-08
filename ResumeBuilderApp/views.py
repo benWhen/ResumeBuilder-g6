@@ -9,7 +9,7 @@ def home(request):
 
 
 def dashboard(request):
-    return render(request, 'pages/dashboard.html')
+    return render(request, 'pages/Dashboard.html')
 
 
 def user_login(request):
@@ -20,7 +20,7 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('dashboard')
         else:
             messages.info(request, 'Username or password is incorrect.')
             return render(request, 'pages/login.html')
