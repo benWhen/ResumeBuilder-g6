@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+{% endcomment %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <main class="form-signin w-100 m-auto">
+            <form method="post" action="{% url 'register' %}" id="registration-form">
+                {% csrf_token %}
+                <h2 class="text-center mb-4">Register</h2>
+                <div class="form-floating">
+                    <input id="inputEmail" class="form-control" type="email" placeholder="name@example.com" name="email" required>
+                    <label for="inputEmail">Email address</label>
+                </div>
+                <div class="form-floating">
+                    <input id="inputPassword" class="form-control" type="password" name="password1"
+                           placeholder="Password" required>
+                    <label for="inputPassword">Password</label>
+                </div>
+                <div class="form-floating">
+                    <input id="inputConfirmPassword" class="form-control" type="password" name="password2"
+                           placeholder="Confirm Password" required>
+                    <label for="inputConfirmPassword">Confirm Password</label>
+                    <ul id="password-requirements" class="list-unstyled">
+                        <li id="length-requirement">Password must contain at least 8 characters.</li>
+                        <li id="uppercase-requirement">Password must contain at least one capitalized letter
+                            character.
+                        </li>
+                        <li id="number-requirement">Password must contain at least one numerical character.</li>
+                    </ul>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+            </form>
+            <p class="mt-3">Already registered? <a href="{% url 'login' %}">Sign in</a></p>
+        </main>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/register.js' %}"></script>
+{% endblock %}
