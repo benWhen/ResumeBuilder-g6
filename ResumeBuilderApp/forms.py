@@ -8,7 +8,7 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ['email', 'password1', 'password2']
 
-class UserEditForm(forms.ModelForm):
+class UserEditForm(forms.ModelForm): #comment so I can re-push
   class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'phone_number', 'address', 'is_staff', 'is_active']

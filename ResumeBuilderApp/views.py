@@ -49,7 +49,7 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
-def edit_user(request, user_id):
+def edit_user(request, user_id): # User editing
   user = User.objects.get(id=user_id)
   if request.method == 'POST':
     form = UserEditForm(request.POST, instance=user)
