@@ -43,3 +43,8 @@ def register(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+
+def editor(request):
+    context = {}
+    return render(request, 'pages/editor.html', context)
