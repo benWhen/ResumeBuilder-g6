@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .forms import CreateUserForm
+from .forms import CreateUserForm, UserEditForm  
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from .models import User
 
 
 def home(request):
@@ -47,3 +48,14 @@ def register(request):
 def user_logout(request):
     logout(request)
     return redirect('login')
+
+def edit_user(request, user_id):
+  user = User.objects.get(id=user_id)
+  if request.method == 'POST':
+    form = UserEditForm(request.POST, instance=user)
+    if form.is_valid():
+        form.save()
+        return render(request, 'pages/Dashboard.html')  # Redirect to dashboard after editing
+  else:
+    form = UserEditForm(instance=user)
+  return render(request, 'pages/edit_user.html', {'form': form})

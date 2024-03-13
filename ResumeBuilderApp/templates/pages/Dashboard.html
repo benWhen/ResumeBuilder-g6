@@ -42,7 +42,7 @@
     <div class="container mt-5">
         <h2>Welcome to the Dashboard</h2>
     </div>
-
+    <a href="{% url 'edit_user' user_id=user.id %}"><button>Edit</button></a>
     <!-- Bootstrap JS and jQuery links (for navbar toggler) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
