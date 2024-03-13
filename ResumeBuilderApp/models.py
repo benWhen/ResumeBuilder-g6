@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
 from .managers import UserManager
 
+
 #  create User model extending AbstractBaseUser and PermissionsMixin
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_("first name"), max_length=40, blank=True)
@@ -14,7 +15,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     # more fields to add - TBD
 
 
-    #fields below are admin fields from the auth.user class
+    # fields below are admin fields from the auth.user class
+
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
