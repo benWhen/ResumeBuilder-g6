@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <button class="editorButton" id="bold" type="button"><b>B</b></button>
+    <button class="editorButton" id="italic" type="button"><i>I</i></button>
+    <button class="editorButton" id="underline" type="button"><u>U</u></button>
+    
+    <select class="editorSelect" id="fontName">
+        <option value="Arial" style="font-family: 'Arial'">Arial</option>   
+        <option value="Times New Roman" style="font-family: 'Times New Roman'">Times New Roman</option>
+    </select>
+    
+    <select class="editorSelect" id="foreColor">
+        <option value="#000000" style="color: #000000">Black</option>   
+        <option value="#ff0000" style="color: #ff0000">Red</option>
+        <option value="#0000ff" style="color: #0000ff">Blue</option>
+        <option value="#00aa00" style="color: #00aa00">Green</option>
+    </select>
+    
+    <button class="editorButton" id="justifyLeft" type="button">Left</button>
+    <button class="editorButton" id="justifyCenter" type="button">Center</button>
+    <button class="editorButton" id="justifyRight" type="button">Right</button>
+    
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            {# temp style #}
+            <div id="maintextarea" contenteditable="true" style="outline-style: solid">
+                Hello World!
+            </div>
+        </div>
+    </div>
+
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous">
+    </script>
+    
+    <script src="{% static 'js/editor.js' %}"></script>
+{% endblock %}

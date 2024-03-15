@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CreateUserForm, UserEditForm  
+from .forms import CreateUserForm, UserEditForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import User
@@ -59,3 +59,7 @@ def edit_user(request, user_id): # User editing
   else:
     form = UserEditForm(instance=user)
   return render(request, 'pages/edit_user.html', {'form': form})
+
+def editor(request):
+    context = {}
+    return render(request, 'pages/editor.html', context)
