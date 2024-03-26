@@ -33,5 +33,12 @@ function buttonSelection(event){
 
 $(".editorButton").mousedown(buttonSelection);
 
+console.log(document.getElementById('resume'))
+document.getElementById('resume').addEventListener('submit', function() {
+    var content = document.getElementById('maintextarea').innerHTML;
+    console.log(content);
+    document.getElementById('data').value = content;
+    console.log(document.getElementById('data').value)
+});
 // how to pass arguments, if ever needed:
 //$(".editorButton").mousedown({command: $(this).id}, buttonSelection);
