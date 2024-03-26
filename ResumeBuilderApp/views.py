@@ -67,6 +67,7 @@ def editor(request):
     context = {}
     return render(request, 'pages/editor.html', context)
 
+#function to save resume
 def saveResume(request):
   if request.method == 'POST':
     content = request.POST.get('data', 'Hello World!')

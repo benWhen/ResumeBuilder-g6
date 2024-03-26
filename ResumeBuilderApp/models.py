@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _("users")
 
 # more classes can be added below - TBD
-
+# resume model 
 class Resume(models.Model):
   name = models.CharField(max_length=50)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
