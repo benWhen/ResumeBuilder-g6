@@ -10,6 +10,11 @@ def home(request):
 
 
 def dashboard(request):
+    if 'user_id' in request.session:
+        user_id = request.session['user_id']
+        user = User.objects.get(id=user_id)
+    else:
+        return redirect('login')
     return render(request, 'pages/Dashboard.html')
 
 
@@ -21,6 +26,7 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            request.session['user_id'] = user.id
             return redirect('dashboard')
         else:
             messages.info(request, 'Username or password is incorrect.')
@@ -47,6 +53,7 @@ def register(request):
 
 def user_logout(request):
     logout(request)
+    request.session.flush()
     return redirect('login')
 
 def edit_user(request, user_id): # User editing
