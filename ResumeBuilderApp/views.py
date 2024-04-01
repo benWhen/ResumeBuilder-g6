@@ -73,10 +73,15 @@ def saveResume(request):
     content = request.POST.get('data', 'Hello World!')
     print(content)
     #if we want to check resume contents for security reasons
-
+    #check if user is logged in
+    if not request.user.is_authenticated:
+      return redirect('login')
+    #retrieve user id from session and check if id is in session
+    user_id = request.session.get('user_id')
+    if not user_id:
+      return redirect('login')
     #saves resume to database
-    username = request.user
-    user = User.objects.get(email=username)
+    user = User.objects.get(id=user_id)
     resumeCount = Resume.objects.filter(user=user).count()
     resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_file=content)
     resume.save()
