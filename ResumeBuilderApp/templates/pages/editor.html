@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block content %}
+    <title id="user" value="{{ request.user }}">{{ request.user }}</title>
+    <a href="{% url 'dashboard' %}"><button>Home</button></a>
     <button class="editorButton" id="bold" type="button"><b>B</b></button>
     <button class="editorButton" id="italic" type="button"><i>I</i></button>
     <button class="editorButton" id="underline" type="button"><u>U</u></button>
@@ -21,16 +23,23 @@
     <button class="editorButton" id="justifyLeft" type="button">Left</button>
     <button class="editorButton" id="justifyCenter" type="button">Center</button>
     <button class="editorButton" id="justifyRight" type="button">Right</button>
-    
+
+
     <div class="container">
         <div class="row justify-content-center mt-5">
             {# temp style #}
-            <div id="maintextarea" contenteditable="true" style="outline-style: solid">
-                Hello World!
+          <form id="resume" action= "{% url 'saveResume' %}" method="post">
+              {% csrf_token %}
+          <button id="save" type="submit">Save</button>
+            <div id="maintextarea" name="maintextarea" contenteditable="true" style="outline-style: solid">
+                {{currentContent|safe}}
             </div>
+            <input name='data' id="data" type="text" hidden="hidden"/>
+          </form>
         </div>
     </div>
-
+    
+    <input type="text" hidden="hidden"/>
     <script
         src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="

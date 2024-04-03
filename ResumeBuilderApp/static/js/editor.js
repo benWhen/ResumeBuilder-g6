@@ -33,5 +33,11 @@ function buttonSelection(event){
 
 $(".editorButton").mousedown(buttonSelection);
 
+
+//gets html from div and adds it to a hidden input element
+document.getElementById('resume').addEventListener('submit', function() {
+    var content = document.getElementById('maintextarea').innerHTML;
+    document.getElementById('data').value = content;
+});
 // how to pass arguments, if ever needed:
 //$(".editorButton").mousedown({command: $(this).id}, buttonSelection);

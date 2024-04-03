@@ -10,5 +10,6 @@ urlpatterns = [
     path('edit_user/<int:user_id>/', views.edit_user, name='edit_user'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('editor/', views.editor, name='editor'),
+    path('saveResume/', views.saveResume, name='saveResume'),
     ]
 #comment so I can re-push
