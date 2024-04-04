@@ -7,7 +7,7 @@
             <a href="{% url 'dashboard' %}" class="btn btn-secondary mb-3">Return to Dashboard</a>
             <form method="post">
                 {% csrf_token %}
-                {% for field in form %}
+                {% for field in form1 %}
                     <div class="form-group">
                         {{ field.label_tag }}
                         {{ field }}

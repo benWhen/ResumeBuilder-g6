@@ -12,3 +12,8 @@ class UserEditForm(forms.ModelForm): #comment so I can re-push
   class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'phone_number', 'address']
+
+class EducationForm(forms.ModelForm):
+  class Meta:
+    model = Education
+    fields = ['institution_name', 'degree', 'major', 'start_date', 'end_date']

@@ -3,9 +3,7 @@ from .forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import *
-import json
-from django.http import JsonResponse
-from django.core.files.base import ContentFile
+from xhtml2pdf import pisa
 
 
 def home(request):
@@ -25,7 +23,6 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('inputEmail')
         password = request.POST.get('inputPassword')
-        print(username, password)
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -63,12 +60,17 @@ def edit_user(request, user_id): # User editing
   user = User.objects.get(id=user_id)
   if request.method == 'POST':
     form = UserEditForm(request.POST, instance=user)
+    EduForm = EducationForm(request.POST)
+    print(EduForm)
+    
     if form.is_valid():
         form.save()
-        return render(request, 'pages/Dashboard.html')  # Redirect to dashboard after editing
+    if EduForm.is_valid():
+        EduForm.save()
+    return render(request, 'pages/Dashboard.html')  # Redirect to dashboard after editing
   else:
     form = UserEditForm(instance=user)
-  return render(request, 'pages/edit_user.html', {'form': form})
+  return render(request, 'pages/edit_user.html', {'form1': form, 'form2':EducationForm()})
 
 def editor(request):
     context = {}
@@ -89,8 +91,13 @@ def saveResume(request):
       return redirect('login')
     #saves resume to database
     user = User.objects.get(id=user_id)
+    #creates a pdf based of resume content
     resumeCount = Resume.objects.filter(user=user).count()
-    resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_file=content)
+    resumePDF = open('Resume' + str(resumeCount) + '.pdf', 'wb')
+    pisaStatus = pisa.CreatePDF(content, resumePDF)
+    print(resumePDF,"\n", pisaStatus)
+    resumePDF.close()
+    resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_content=content)
     resume.save()
     return redirect('editor')
   else:
