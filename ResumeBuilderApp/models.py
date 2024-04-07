@@ -55,18 +55,30 @@ class Resume(models.Model):
     def __str__(self):
         return self.name
 
-    class Job(models.Model):
-        user = models.ForeignKey(User, on_delete=models.CASCADE)
-        company_name = models.CharField(max_length=100)
-        role = models.CharField(max_length=50)
-        location = models.CharField(max_length=100)
-        start_date = models.DateField()
-        end_date = models.DateField()
-        description = models.TextField()
-        objects = models.Manager()
+class pdfResume(models.Model):
+    name = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pdf_file = models.BinaryField(null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
 
-        def __str__(self):
-            return self.company_name + " - " + self.role
+    def __str__(self):
+        return self.name
+
+
+class Job(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    company_name = models.CharField(max_length=100)
+    role = models.CharField(max_length=50)
+    location = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    description = models.TextField()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.company_name + " - " + self.role
 
 
 class EducationChoices(models.TextChoices):

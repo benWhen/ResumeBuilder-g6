@@ -3,8 +3,10 @@ from .forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import *
+from reportlab.pdfgen import canvas
+from io import BytesIO
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.files.base import ContentFile
 
 
@@ -95,3 +97,25 @@ def saveResume(request):
     return redirect('editor')
   else:
     return redirect('editor')
+
+
+def makeResume(request, user_id):
+    data = User.objects.get(id=user_id)
+    skills = Skill.objects.all()
+    buffer=BytesIO()
+    pdf=canvas.Canvas(buffer)
+    x = 100; y =700
+    for skill in skills:
+        pdf.drawString(x, y, f"{skill.skill_name} - {skill.description}")
+        x+=100; y+=100
+    pdf.save()
+    pdf_content=buffer.getvalue()
+    buffer.close()
+
+    pdf_resume, created = pdfResume.objects.get_or_create(name="Resume", user_id=user_id)
+    pdf_resume.pdf_file = pdf_content #contentfile()
+    pdf_resume.save()
+
+    response = HttpResponse(pdf_content,content_type='application/pdf')
+    response['Content'] = 'attachment; filename="Resume.pdf"'
+    return response
