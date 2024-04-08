@@ -112,8 +112,9 @@ def makeResume(request, user_id):
     pdf_content=buffer.getvalue()
     buffer.close()
 
-    pdf_resume, created = pdfResume.objects.get_or_create(name="Resume", user_id=user_id)
-    pdf_resume.pdf_file = pdf_content #contentfile()
+    resumeCount = pdfResume.objects.filter(user=user_id).count()
+    pdf_resume, created = pdfResume.objects.get_or_create(name="Resume " + str(resumeCount), user_id=user_id)
+    pdf_resume.pdf_file.save(f"Resume {resumeCount}.pdf", ContentFile(pdf_content), save=True) #pdf_resume.pdf_file = pdf_content #
     pdf_resume.save()
 
     response = HttpResponse(pdf_content,content_type='application/pdf')

@@ -58,7 +58,7 @@ class Resume(models.Model):
 class pdfResume(models.Model):
     name = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    pdf_file = models.BinaryField(null=True, blank=True)
+    pdf_file = models.FileField(null=True, blank=True) #models.BinaryField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     objects = models.Manager()
