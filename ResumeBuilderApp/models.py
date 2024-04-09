@@ -57,12 +57,12 @@ class Resume(models.Model):
 
 class Job(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=100)
-    role = models.CharField(max_length=50)
-    location = models.CharField(max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    description = models.TextField()
+    company_name = models.CharField(max_length=100, blank = True)
+    role = models.CharField(max_length=50, blank = True)
+    location = models.CharField(max_length=100, blank = True)
+    start_date = models.DateField(blank = True)
+    end_date = models.DateField(blank = True)
+    description = models.TextField(blank = True)
     objects = models.Manager()
 
     def __str__(self):
@@ -80,11 +80,11 @@ class EducationChoices(models.TextChoices):
 
 class Education(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    institution_name = models.CharField(max_length=150)
-    degree = models.CharField(choices=EducationChoices.choices, max_length=100)
-    major = models.CharField(max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    institution_name = models.CharField(max_length=150, blank=True)
+    degree = models.CharField(choices=EducationChoices.choices, max_length=100, blank=True)
+    major = models.CharField(max_length=100, blank=True)
+    start_date = models.DateField(blank=True)
+    end_date = models.DateField(blank=True)
     objects = models.Manager()
 
     def __str__(self):
@@ -93,8 +93,8 @@ class Education(models.Model):
 
 class Skill(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    skill_name = models.CharField(max_length=150)
-    description = models.TextField()
+    skill_name = models.CharField(max_length=150, blank = True)
+    description = models.TextField(blank = True, null = True)
     objects = models.Manager()
 
     def __str__(self):
