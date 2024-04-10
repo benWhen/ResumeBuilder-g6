@@ -5,7 +5,6 @@ from django.contrib.auth import authenticate, login, logout
 from .models import *
 from xhtml2pdf import pisa
 from datetime import datetime
-import markdownify
 
 
 def home(request):
@@ -109,7 +108,6 @@ def editor(request):
 def saveResume(request):
   if request.method == 'POST':
     content = request.POST.get('data', 'Hello World!')
-    print(markdownify.markdownify(content))
     #if we want to check resume contents for security reasons
     #check if user is logged in
     if not request.user.is_authenticated:
@@ -122,10 +120,10 @@ def saveResume(request):
     user = User.objects.get(id=user_id)
     #creates a pdf based of resume content
     resumeCount = Resume.objects.filter(user=user).count()
-    resumePDF = open('Resume' + str(resumeCount) + '.pdf', 'wb')
-    pisaStatus = pisa.CreatePDF(content, resumePDF)
-    print(resumePDF,"\n", pisaStatus)
-    resumePDF.close()
+    #resumePDF = open('Resume' + str(resumeCount) + '.pdf', 'wb')
+    #pisaStatus = pisa.CreatePDF(content, resumePDF)
+    #print(resumePDF,"\n", pisaStatus)
+    #resumePDF.close()
     resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_file=content)
     resume.save()
     return redirect('editor')
