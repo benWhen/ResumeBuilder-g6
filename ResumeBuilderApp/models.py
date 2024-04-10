@@ -55,7 +55,9 @@ class Resume(models.Model):
     def __str__(self):
         return self.name
 
-class pdfResume(models.Model):
+
+# TBD - this is for the quickResume view - need to decide if the resume models should merge
+class quickResume(models.Model):
     name = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     pdf_file = models.FileField(null=True, blank=True) #models.BinaryField(null=True, blank=True)
