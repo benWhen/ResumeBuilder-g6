@@ -12,7 +12,7 @@
                 {% endif %}
                 <a href="{% url 'edit_user' user_id=user.id %}" class="btn btn-primary">Edit Account</a>
                 <br><a href="{% url 'editor' %}"><button>Resume editor</button></a>
-                <a href="{% url 'makeResume' user_id=user.id %}" class="btn btn-danger">Make Resume</a>
+                <a href="{% url 'quickResume' user_id=user.id %}" class="btn btn-danger">Make Resume</a>
                 <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
             {% else %}
                 <p>You are not logged in.</p>
