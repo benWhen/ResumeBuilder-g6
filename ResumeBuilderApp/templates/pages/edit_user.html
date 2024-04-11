@@ -7,7 +7,7 @@
             <a href="{% url 'dashboard' %}" class="btn btn-secondary mb-3">Return to Dashboard</a>
             <form method="post">
                 {% csrf_token %}
-                {% for field in form %}
+                {% for field in form1 %}
                     <div class="form-group">
                         {{ field.label_tag }}
                         {{ field }}
@@ -19,8 +19,36 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" name="option" class="btn btn-primary" value="User Info">Save Changes</button>
             </form>
+          <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <br>
+                    {{form2.as_p}}
+                    <label>Start Date:</label><input name="start_date" id="start_date" type="date">
+                    <label>End Date:</label><input name="end_date" id="end_date" type="date">
+                    <button type="submit" name="option" class="btn btn-primary" value="Add Education"">Add Education</button>
+                </div>
+          </form>
+          <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <br>
+                    {{form3.as_p}}
+                    <button type="submit" name="option" class="btn btn-primary" value="Add Skill"">Add Skill</button>
+                </div>
+          </form>
+          <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <br>
+                    {{form4.as_p}}
+                    <label>Start Date:</label><input name="start_date" id="start_date" type="date">
+                    <label>End Date:</label><input name="end_date" id="end_date" type="date">
+                    <button type="submit" name="option" class="btn btn-primary" value="Add Experience"">Add Experience</button>
+                </div>
+          </form>
         </div>
     </div>
 {% endblock %}
