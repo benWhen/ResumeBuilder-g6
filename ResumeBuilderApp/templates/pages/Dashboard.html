@@ -22,7 +22,9 @@
                 </select>
                 <button type="submit" class="btn btn-primary">Load</button>
             </form>
+                <a href="{% url 'quickResume' user_id=user.id %}" class="btn btn-danger">Make Resume</a>
                 <br><a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+
             {% else %}
                 <p>You are not logged in.</p>
                 <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
