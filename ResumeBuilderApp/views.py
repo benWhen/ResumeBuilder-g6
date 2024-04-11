@@ -19,7 +19,8 @@ def dashboard(request):
         user = User.objects.get(id=user_id)
     else:
         return redirect('login')
-    return render(request, 'pages/Dashboard.html')
+    resumes = Resume.objects.filter(user=user)
+    return render(request, 'pages/Dashboard.html', {'resumes': resumes})
 
 
 def user_login(request):
@@ -110,7 +111,6 @@ def editor(request):
 def saveResume(request):
   if request.method == 'POST':
     content = request.POST.get('data', 'Hello World!')
-    print(request.POST)
     #if we want to check resume contents for security reasons
     #check if user is logged in
     if not request.user.is_authenticated:
@@ -136,3 +136,23 @@ def saveResume(request):
     return response
   else:
     return redirect('editor')
+
+def loadResume(request):
+    print("loadResume")
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+          return redirect('login')
+        #retrieve user id from session and check if id is in session
+        user_id = request.session.get('user_id')
+        if not user_id:
+          return redirect('login')
+        print(request.POST)
+        resumeName = request.POST.get('resumeName')
+        if resumeName == "":
+            resumes = Resume.objects.filter(user=request.user)
+            return render(request, 'pages/dashboard.html', {"resumes": resumes})
+        resume = Resume.objects.get(name=resumeName, user=request.user)
+        return render(request, 'pages/editor.html', {"currentContent": resume.resume_file})
+    else:
+        resumes = Resume.objects.filter(user=request.user)
+        return render(request, 'pages/dashboard.html', {"resumes": resumes})
