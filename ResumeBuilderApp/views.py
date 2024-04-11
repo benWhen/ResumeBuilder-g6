@@ -120,10 +120,9 @@ def saveResume(request):
     user = User.objects.get(id=user_id)
     #creates a pdf based of resume content
     resumeCount = Resume.objects.filter(user=user).count()
-    #resumePDF = open('Resume' + str(resumeCount) + '.pdf', 'wb')
-    #pisaStatus = pisa.CreatePDF(content, resumePDF)
-    #print(resumePDF,"\n", pisaStatus)
-    #resumePDF.close()
+    resumePDF = open('Resume' + str(resumeCount) + '.pdf', 'wb')
+    pisaStatus = pisa.CreatePDF(content, resumePDF)
+    resumePDF.close()
     resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_file=content)
     resume.save()
     return redirect('editor')
