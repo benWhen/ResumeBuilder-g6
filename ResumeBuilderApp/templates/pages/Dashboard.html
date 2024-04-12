@@ -10,9 +10,22 @@
                 {% else %}
                     <p>Welcome, {{ user.email }}</p>
                 {% endif %}
-                <a href="{% url 'edit_user' user_id=user.id %}" class="btn btn-primary">Edit Account</a>
-                <br><a href="{% url 'editor' %}"><button>Resume editor</button></a>
-                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit Profile</h5>
+                        <p class="card-text">Update your personal information.</p>
+                        <a href="{% url 'edit_user' user_id=user.id %}" class="btn btn-primary">Edit Account</a>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit Resume</h5>
+                        <p class="card-text">Create a new resume or make changes to your current resume.</p>
+                        <a href="{% url 'editor' %}" class="btn btn-primary">Resume Editor</a>
+                    </div>
+                </div>
             {% else %}
                 <p>You are not logged in.</p>
                 <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
