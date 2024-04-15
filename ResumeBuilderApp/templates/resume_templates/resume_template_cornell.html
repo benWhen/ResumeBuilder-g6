@@ -1,0 +1,36 @@
+{% block content %}
+    <div class="resume-container">
+        <div class="resume-header">
+            <h1>{{ name }}</h1>
+            <p>{{ email }} | {{ phone }}</p>
+        </div>
+        <div class="resume-education">
+            <h2>Education</h2>
+            {% for institution in education %}
+                <div class="education-item">
+                    <h3>{{ institution.institution_name }}</h3>
+                    <p>{{ institution.degree }} - {{ institution.major }}</p>
+                    <p>{{ institution.start_date }} - {{ institution.end_date }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="resume-experience">
+            <h2>Work Experience</h2>
+            {% for job in experience %}
+                <div class="experience-item">
+                    <h3>{{ job.company_name }} - {{ job.role }}</h3>
+                    <p>{{ job.start_date }} - {{ job.end_date }}</p>
+                    <p>{{ job.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="resume-skills">
+            <h2>Skills</h2>
+            <ul class="skills-item">
+                {% for skill in skills %}
+                    <li>{{ skill.skill_name }} - {{ skill.description }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
