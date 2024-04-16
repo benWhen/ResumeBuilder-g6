@@ -24,6 +24,7 @@ def dashboard(request):
         return redirect('login')
     resumes = Resume.objects.filter(user=user)
     resume_templates = get_template_library(request)
+    print(f"Resume templates: {resume_templates}")
     return render(request, 'pages/Dashboard.html', {'resumes': resumes, 'resume_templates': resume_templates})
 
 
@@ -132,6 +133,7 @@ def add_Job(request):
         end_date = datetime.strptime(request.POST.get("end_date",""), '%Y-%m-%d')
         Job(user=user, company_name=company_name, role=role, location=location,
             description=description, start_date=start_date, end_date=end_date).save()
+    return render(request, 'pages/edit_user.html', {'form1': UserEditForm(instance=user), 'form2':EducationForm(), 'form3':SkillForm(),'form4':JobForm()})
 
 
 def editor(request):
@@ -212,8 +214,9 @@ def quickResume(request, user_id):
 
 
 def get_template_library(request):
-    resume_templates = ResumeTemplate.objects.all()
-    return render(request, 'pages/dashboard.html', {'resume_templates': resume_templates})
+    with open('ResumeBuilderApp/static/data/resume_templates.json', 'r') as f:
+        resume_templates = json.load(f)
+    return resume_templates
 
 
 def generate_resume(request, resume_template):

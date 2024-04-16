@@ -16,6 +16,6 @@ urlpatterns = [
     path('add_Skill/', views.add_Skill, name='add_Skill'),
     path('add_Job/', views.add_Job, name='add_Job'),
     path('add_Education/', views.add_Education, name='add_Education'),
-    path('generate_resume/', views.generate_resume, name='generate_resume')
+    path('generate_resume/<str:resume_template>/', views.generate_resume, name='generate_resume')
     ]
 #comment so I can re-push
