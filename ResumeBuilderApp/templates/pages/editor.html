@@ -2,33 +2,71 @@
 {% load static %}
 
 {% block content %}
-    <button class="editorButton" id="bold" type="button"><b>B</b></button>
-    <button class="editorButton" id="italic" type="button"><i>I</i></button>
-    <button class="editorButton" id="underline" type="button"><u>U</u></button>
-    
-    <select class="editorSelect" id="fontName">
-        <option value="Arial" style="font-family: 'Arial'">Arial</option>   
-        <option value="Times New Roman" style="font-family: 'Times New Roman'">Times New Roman</option>
-    </select>
-    
-    <select class="editorSelect" id="foreColor">
-        <option value="#000000" style="color: #000000">Black</option>   
-        <option value="#ff0000" style="color: #ff0000">Red</option>
-        <option value="#0000ff" style="color: #0000ff">Blue</option>
-        <option value="#00aa00" style="color: #00aa00">Green</option>
-    </select>
-    
-    <button class="editorButton" id="justifyLeft" type="button">Left</button>
-    <button class="editorButton" id="justifyCenter" type="button">Center</button>
-    <button class="editorButton" id="justifyRight" type="button">Right</button>
-    
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            {# temp style #}
-            <div id="maintextarea" contenteditable="true" style="outline-style: solid">
-                Hello World!
-            </div>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <div id="stickyTop" class="justify-content-center text-center">
+        <div id="topBar"  class="justify-content-center text-center mt-2 mb-2">
+
+            <select class="editorSelect" id="fontName" title="Font">
+                <option value="Arial" style="font-family: 'Arial'">Arial</option>
+                <option value="Calibri" style="font-family: 'Calibri'">Calibri</option>
+                <option value="Times New Roman" style="font-family: 'Times New Roman'">Times New Roman</option>
+            </select>
+
+            <div class="separator"></div>
+
+            <select class="editorSelect" id="fontSize" title="Font size">
+                <option value="1" >7.5pt</option>
+                <option value="2" >10pt</option>
+                <option value="3" selected="true">12pt</option>
+                <option value="4" >13.5pt</option>
+                <option value="5" >18pt</option>
+                <option value="6" >24pt</option>
+                <option value="7" >36pt</option>
+            </select>
+
+            <div class="separator"></div>
+
+            <button class="editorButton" id="bold" type="button" title="Bold (Ctrl+B)"><i class="fa fa-bold"></i></button>
+            <button class="editorButton" id="italic" type="button" title="Italicize (Ctrl+I)"><i class="fa fa-italic"></i></button>
+            <button class="editorButton" id="underline" type="button" title="Underline (Ctrl+U)"><i class="fa fa-underline"></i></button>
+
+            <select class="editorSelect" id="foreColor" title="Text color">
+                <option value="#000000" style="color: #000000">■</option>
+                <option value="#ff0000" style="color: #ff0000">■</option>
+                <option value="#0000ff" style="color: #0000ff">■</option>
+                <option value="#00aa00" style="color: #00aa00">■</option>
+            </select>
+
+            <div class="separator"></div>
+
+            <button class="editorButton" id="justifyLeft" type="button" title="Align left"><i class="fa fa-align-left"></i></button>
+            <button class="editorButton" id="justifyCenter" type="button" title="Align center"><i class="fa fa-align-center"></i></button>
+            <button class="editorButton" id="justifyRight" type="button" title="Align right"><i class="fa fa-align-right"></i></button>
+            <button class="editorButton" id="justifyFull" type="button" title="Align justify"><i class="fa-solid fa-align-justify"></i></button>
+
+            <div class="separator"></div>
+
+            <button class="editorButton" id="insertUnorderedList" type="Button" title="Unordered list"><i class="fa fa-list-ul"></i></button>
+            <button class="editorButton" id="insertOrderedList" type="Button" title="Ordered list"><i class="fa fa-list-ol"></i></button>
+
+            <div class="separator"></div>
+
+            <button class="editorButton" id="indent" type="Button" title="Indent"><i class="fa-solid fa-indent"></i></button>
+            <button class="editorButton" id="outdent" type="Button" title="Outdent"><i class="fa-solid fa-outdent"></i></button>
+
+            <div class="separator"></div>
+
+            <button id="exportButton" type="Button" title="Export document"><i class="fa-solid fa-file-export"></i></button>
+
         </div>
+    </div>
+
+    <div id="textAreaContainer" class="row justify-content-center mt-2">
+        <div id="mainTextArea" class="justify-content-center mt-4 mb-4" contenteditable="true" style="font-family: Arial"></div>
+{#        <div id="mainTextArea" class="justify-content-center mt-4 mb-4" data-pageNum=1>#}
+{#            <div id="textDiv" contenteditable="true" style="font-family: Arial"></div>#}
+{#        </div>#}
     </div>
 
     <script
@@ -38,4 +76,5 @@
     </script>
     
     <script src="{% static 'js/editor.js' %}"></script>
+    
 {% endblock %}
