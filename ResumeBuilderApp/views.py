@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template import Template, Context
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -24,7 +25,6 @@ def dashboard(request):
         return redirect('login')
     resumes = Resume.objects.filter(user=user)
     resume_templates = get_template_library(request)
-    print(f"Resume templates: {resume_templates}")
     return render(request, 'pages/Dashboard.html', {'resumes': resumes, 'resume_templates': resume_templates})
 
 
@@ -214,12 +214,22 @@ def quickResume(request, user_id):
 
 
 def get_template_library(request):
-    with open('ResumeBuilderApp/static/data/resume_templates.json', 'r') as f:
-        resume_templates = json.load(f)
+    jsonfile = open('ResumeBuilderApp/static/data/resume_templates.json', 'r')
+    resume_templates = json.load(jsonfile)
+    jsonfile.close()
     return resume_templates
 
 
+def get_template(request, template_name):
+    templates = get_template_library(request)
+    for template in templates:
+        if template['name'] == template_name:
+            return template
+    return None
+
+
 def generate_resume(request, resume_template):
+    # get user data
     user = request.user
     education = Education.objects.filter(user=user)
     skills = Skill.objects.filter(user=user)
@@ -230,5 +240,26 @@ def generate_resume(request, resume_template):
         'skills': skills,
         'jobs': jobs
     }
-    return render(request, f'resume_templates/{resume_template}.html', user_data)
+    # reload templates to pull data from
+    resume_template_full = get_template(request, resume_template)
+    template_content = resume_template_full.get('content')
+    # render the template with Django
+    django_template = Template(template_content)
+    rendered_template = django_template.render(Context(user_data))
+    pdf_content = convert_to_pdf(rendered_template)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="resume.pdf"'
+    response.write(pdf_content)
+    return response
+
+
+def convert_to_pdf(template_content):
+    # PDF file buffer
+    result_file = BytesIO()
+    # PDF to HTML conversion
+    pisa.CreatePDF(template_content.encode('utf-8'), dest=result_file)
+    pdf_content = result_file.getvalue()
+    # Close buffer
+    result_file.close()
+    return pdf_content
 
