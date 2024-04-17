@@ -32,34 +32,52 @@
                 </div>
             </div>
 
-          <form action="{% url 'add_Education' %}" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <br>
-                    {{form2.as_p}}
-                    <label>Start Date:</label><input name="start_date" id="start_date" type="date">
-                    <label>End Date:</label><input name="end_date" id="end_date" type="date">
-                    <button type="submit" name="option" class="btn btn-primary" value="Add Education"">Add Education</button>
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="card-title text-center mb-4">Add Education</h2>
+                        <form action="{% url 'add_Education' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <br>
+                                {{form2.as_p}}
+                                <label>Start Date:</label><input name="start_date" id="start_date" type="date">
+                                <label>End Date:</label><input name="end_date" id="end_date" type="date">
+                                <br><br><button type="submit" name="option" class="btn btn-primary" value="Add Education"">Add Education</button>
+                            </div>
+                        </form>
                 </div>
-          </form>
-          <form action="{% url 'add_Skill' %}" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <br>
-                    {{form3.as_p}}
-                    <button type="submit" name="option" class="btn btn-primary" value="Add Skill"">Add Skill</button>
+            </div>
+
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="card-title text-center mb-4">Add Skill</h2>
+                    <form action="{% url 'add_Skill' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <br>
+                                {{form3.as_p}}
+                                <button type="submit" name="option" class="btn btn-primary" value="Add Skill"">Add Skill</button>
+                            </div>
+                      </form>
                 </div>
-          </form>
-          <form action="{% url 'add_Job' %}" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <br>
-                    {{form4.as_p}}
-                    <label>Start Date:</label><input name="start_date" id="start_date" type="date">
-                    <label>End Date:</label><input name="end_date" id="end_date" type="date">
-                    <button type="submit" name="option" class="btn btn-primary" value="Add Experience"">Add Experience</button>
+            </div>
+
+
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="card-title text-center mb-4">Add Jobs</h2>
+                    <form action="{% url 'add_Job' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <br>
+                                {{form4.as_p}}
+                                <label>Start Date:</label><input name="start_date" id="start_date" type="date">
+                                <label>End Date:</label><input name="end_date" id="end_date" type="date">
+                                <br><br><button type="submit" name="option" class="btn btn-primary" value="Add Experience"">Add Experience</button>
+                            </div>
+                      </form>
                 </div>
-          </form>
+            </div>
         </div>
     </div>
 {% endblock %}
