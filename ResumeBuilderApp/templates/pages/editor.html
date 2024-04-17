@@ -5,13 +5,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <title id="user" value="{{ request.user }}">{{ request.user }}</title>
-    <a href="{% url 'dashboard' %}"><button>Home</button></a>
-    <form id="resume" action= "{% url 'saveResume' %}" method="post">
-        {% csrf_token %}
-        <input name='data' id="data" type="text" hidden="hidden"/>
-        <button class="editorButton" id="save" name="chosen" value="save" type="submit">Save</button>
-        <button class="editorButton" id="export" name="chosen" value="export" type="submit">Export</button>
-    </form>
+    {# same function as button above? #}
+    {#<a href="{% url 'dashboard' %}"><button>Home</button></a>#}
 
     <div id="stickyTop" class="justify-content-center text-center">
         <div id="topBar"  class="justify-content-center text-center mt-2 mb-2">
@@ -66,7 +61,15 @@
 
             <div class="separator"></div>
 
-            <button id="exportButton" type="Button" title="Export document"><i class="fa-solid fa-file-export"></i></button>
+            <form class="builderForm" id="resume" action= "{% url 'saveResume' %}" method="post">
+                {% csrf_token %}
+                <input name='data' id="data" type="text" hidden="hidden"/>
+                <button class="formButton" id="save" name="chosen" value="save" type="submit" title="Save document"><i class="fa-solid fa-floppy-disk"></i></button>
+                <button class="formButton" id="export" name="chosen" value="export" type="submit" title="Export document"><i class="fa-solid fa-file-export"></i></button>
+                {# old buttons in case i messed something up #}
+                {#<button class="editorButton" id="save" name="chosen" value="save" type="submit">Save</button>#}
+                {#<button class="editorButton" id="export" name="chosen" value="export" type="submit">Export</button>#}
+            </form>
 
         </div>
     </div>
