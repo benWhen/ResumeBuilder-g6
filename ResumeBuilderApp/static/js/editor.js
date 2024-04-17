@@ -29,8 +29,7 @@ $(function () {
 
 function buttonSelection(event){
     event.preventDefault();
-    console.log(this.value);
-    document.execCommand(this.id, false, this.value || null);
+    document.execCommand(this.id);
     $('#mainTextArea').focus();
 }
 
@@ -42,6 +41,7 @@ $(document).ready(function () {
 });
 
 $(".editorButton").mousedown(buttonSelection);
+
 $(document).on('keydown', '#mainTextArea', function(event){
 
     // Tab is keyCode 9
@@ -52,6 +52,11 @@ $(document).on('keydown', '#mainTextArea', function(event){
     }
 });
 
+//gets html from div and adds it to a hidden input element
+document.getElementById('resume').addEventListener('submit', function() {
+    var content = document.getElementById('maintextarea').innerHTML;
+    document.getElementById('data').value = content;
+});
 
 // New page attempt and failure:
 

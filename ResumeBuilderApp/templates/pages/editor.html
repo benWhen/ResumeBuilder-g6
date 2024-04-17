@@ -4,6 +4,15 @@
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+    <title id="user" value="{{ request.user }}">{{ request.user }}</title>
+    <a href="{% url 'dashboard' %}"><button>Home</button></a>
+    <form id="resume" action= "{% url 'saveResume' %}" method="post">
+        {% csrf_token %}
+        <input name='data' id="data" type="text" hidden="hidden"/>
+        <button class="editorButton" id="save" name="chosen" value="save" type="submit">Save</button>
+        <button class="editorButton" id="export" name="chosen" value="export" type="submit">Export</button>
+    </form>
+
     <div id="stickyTop" class="justify-content-center text-center">
         <div id="topBar"  class="justify-content-center text-center mt-2 mb-2">
 
@@ -63,7 +72,7 @@
     </div>
 
     <div id="textAreaContainer" class="row justify-content-center mt-2">
-        <div id="mainTextArea" class="justify-content-center mt-4 mb-4" contenteditable="true" style="font-family: Arial"></div>
+        <div id="mainTextArea" class="justify-content-center mt-4 mb-4" contenteditable="true" style="font-family: Arial">{{currentContent|safe}}</div>
 {#        <div id="mainTextArea" class="justify-content-center mt-4 mb-4" data-pageNum=1>#}
 {#            <div id="textDiv" contenteditable="true" style="font-family: Arial"></div>#}
 {#        </div>#}
@@ -76,5 +85,5 @@
     </script>
     
     <script src="{% static 'js/editor.js' %}"></script>
-    
+
 {% endblock %}

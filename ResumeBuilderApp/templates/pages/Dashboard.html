@@ -1,51 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <!-- Bootstrap CSS link -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom CSS for button color -->
-    <style>
-        .btn-custom-primary {
-            color: #fff;
-            background-color: #007bff; /* Adjust this color to match other blue elements */
-            border-color: #007bff; /* Adjust this color to match other blue elements */
-        }
-        .btn-custom-primary:hover {
-            color: #fff;
-            background-color: #0056b3; /* Adjust this color to match other blue elements */
-            border-color: #0056b3; /* Adjust this color to match other blue elements */
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+{% extends 'base.html' %}
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a>Hello {{ request.user }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-custom-primary" href="{% url 'logout' %}">Logout</a>
-                </li>
-            </ul>
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">Dashboard</h2>
+            {% if user.is_authenticated %}
+                {% if user.first_name and user.last_name %}
+                    <p>Welcome, {{ user.first_name }} {{ user.last_name }}</p>
+                {% else %}
+                    <p>Welcome, {{ user.email }}</p>
+                {% endif %}
+
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit Profile</h5>
+                        <p class="card-text">Update your personal information.</p>
+                        <a href="{% url 'edit_user' user_id=user.id %}" class="btn btn-primary">Edit Account</a>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit Resume</h5>
+                        <p class="card-text">Create a new resume or make changes to your current resume.</p>
+                        <a href="{% url 'editor' %}" class="btn btn-primary">Resume Editor</a>
+                    </div>
+                </div>
+
+            <form action="{% url 'loadResume' %}" method="post">
+                {% csrf_token %}
+                <select name="resumeName">
+                    <option value="">Resume select</option>
+                    {% for resume in resumes %}
+                        <option value="{{ resume.name }}">{{ resume.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">Load</button>
+            </form>
+                <a href="{% url 'quickResume' user_id=user.id %}" class="btn btn-danger">Make Resume</a>
+                <br><a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+
+            {% else %}
+                <p>You are not logged in.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+            {% endif %}
         </div>
-    </nav>
-
-    <div class="container mt-5">
-        <h2>Welcome to the Dashboard</h2>
     </div>
-    <a href="{% url 'edit_user' user_id=user.id %}"><button>Edit</button></a> <!-- comment so I can re-push -->
-    <!-- Bootstrap JS and jQuery links (for navbar toggler) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+{% endblock %}

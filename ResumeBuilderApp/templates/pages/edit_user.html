@@ -1,15 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit User</title>
-</head>
-<body>
-    <h1>Edit User</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save My Changes</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">User Profile</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form1 %}
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">{{ field.label }}</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="text-center d-flex flex-column align-items-center">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">Return to Dashboard</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+          <form action="{% url 'add_Education' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <br>
+                    {{form2.as_p}}
+                    <label>Start Date:</label><input name="start_date" id="start_date" type="date">
+                    <label>End Date:</label><input name="end_date" id="end_date" type="date">
+                    <button type="submit" name="option" class="btn btn-primary" value="Add Education"">Add Education</button>
+                </div>
+          </form>
+          <form action="{% url 'add_Skill' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <br>
+                    {{form3.as_p}}
+                    <button type="submit" name="option" class="btn btn-primary" value="Add Skill"">Add Skill</button>
+                </div>
+          </form>
+          <form action="{% url 'add_Job' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <br>
+                    {{form4.as_p}}
+                    <label>Start Date:</label><input name="start_date" id="start_date" type="date">
+                    <label>End Date:</label><input name="end_date" id="end_date" type="date">
+                    <button type="submit" name="option" class="btn btn-primary" value="Add Experience"">Add Experience</button>
+                </div>
+          </form>
+        </div>
+    </div>
+{% endblock %}
+
+

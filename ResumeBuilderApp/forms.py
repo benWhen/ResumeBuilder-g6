@@ -11,4 +11,19 @@ class CreateUserForm(UserCreationForm):
 class UserEditForm(forms.ModelForm): #comment so I can re-push
   class Meta:
       model = User
-      fields = ['first_name', 'last_name', 'email', 'phone_number', 'address', 'is_staff', 'is_active']
+      fields = ['first_name', 'last_name', 'email', 'phone_number', 'address']
+
+class EducationForm(forms.ModelForm):
+  class Meta:
+    model = Education
+    fields = ['institution_name', 'degree', 'major']
+
+class SkillForm(forms.ModelForm):
+  class Meta:
+    model = Skill
+    fields = ['skill_name', 'description']
+
+class JobForm(forms.ModelForm):
+  class Meta:
+    model = Job
+    fields = ['company_name', 'role', 'location', 'description']

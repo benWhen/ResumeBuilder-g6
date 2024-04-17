@@ -36,3 +36,8 @@ class UserAdmin(UA):
     ordering = ("-is_staff",)
     readonly_fields = ('last_login', 'date_joined')
 
+admin.site.register(Resume)
+admin.site.register(Skill)
+admin.site.register(Education)
+admin.site.register(Job)
+admin.site.register(quickResume)
