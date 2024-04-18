@@ -56,6 +56,18 @@ class Resume(models.Model):
         return self.name
 
 
+class ResumeTemplate(models.Model):
+    name = models.CharField(max_length=50)
+    preview_image = models.ImageField(upload_to='resume_templates', null=True, blank=True)
+    content = models.TextField()
+    date_created = models.DateField(auto_now_add=True)
+    date_modified = models.DateField(auto_now=True)
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.name
+
+
 # TBD - this is for the quickResume view - need to decide if the resume models should merge
 class quickResume(models.Model):
     name = models.CharField(max_length=50)
