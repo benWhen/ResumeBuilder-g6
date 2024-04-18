@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Template 1",
+    "preview_image": "resume_templates/template1-thumb.jpg",
+    "content": "<html><body><h1>{{ user.first_name }} {{ user.last_name }}</h1><p>{{ user.email }} | {{ user.phone }}</p><h2>Education</h2{% for institution in education %}<h3>{{ institution.institution_name }}</h3><p>{{ institution.degree }} - {{ institution.major }}</p><p>{{ institution.start_date }} - {{ institution.end_date }}</p>{% endfor %}<h2>Work Experience</h2>{% for job in experience %}<h3>{{ job.company_name }} - {{ job.role }}</h3><p>{{ job.start_date }} - {{ job.end_date }}</p><p>{{ job.description }}</p>{% endfor %}<h2>Skills</h2><ul>{% for skill in skills %}<li>{{ skill.skill_name }} - {{ skill.description }}</li>{% endfor %}</ul></body></html>"
+  },
+  {
+    "name": "Template 2",
+    "preview_image": "resume_templates/template1-thumb.jpg",
+    "content": "<html><body><h1>{{ user.first_name }} {{ user.last_name }}</h1><p>{{ user.email }}</p><h2>Education</h2>{% for edu in education %}<p>{{ edu.institution_name }} - {{ edu.degree }} ({{ edu.major }})</p>{% endfor %}<h2>Skills</h2>{% for skill in skills %}<p>{{ skill.skill_name }} - {{ skill.description }}</p>{% endfor %}<h2>Experience</h2>{% for job in jobs %}<p>{{ job.company_name }} - {{ job.role }}</p><p>{{ job.description }}</p>{% endfor %}</body></html>"
+  }
+]

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
     <div class="row justify-content-center mt-5">
@@ -10,7 +11,18 @@
                 {% else %}
                     <p>Welcome, {{ user.email }}</p>
                 {% endif %}
-
+                <div class="resume-templates">
+                <h2>Select a Resume Template</h2>
+                <div class="row">
+                    {% for template in resume_templates %}
+                    <div class="col-md-4">
+                        <a href="{% url 'generate_resume' template.name %}">
+                            <img src="{% static template.preview_image %}" alt="{{ template.name }} Preview" class="img-fluid">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                </div>
 
                 <div class="card mb-3">
                     <div class="card-body">

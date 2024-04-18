@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template import Template, Context
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -23,7 +24,8 @@ def dashboard(request):
     else:
         return redirect('login')
     resumes = Resume.objects.filter(user=user)
-    return render(request, 'pages/Dashboard.html', {'resumes': resumes})
+    resume_templates = get_template_library(request)
+    return render(request, 'pages/Dashboard.html', {'resumes': resumes, 'resume_templates': resume_templates})
 
 
 def user_login(request):
@@ -91,7 +93,7 @@ def add_Education(request):
         major = EduForm.cleaned_data.get("major","")
         start_date = datetime.strptime(request.POST.get("start_date",""), '%Y-%m-%d')
         end_date = datetime.strptime(request.POST.get("end_date",""), '%Y-%m-%d')
-        Education(user=user, institution_name=name, degree=degree, major=major, 
+        Education(user=user, institution_name=name, degree=degree, major=major,
                       start_date=start_date, end_date=end_date).save()
     return render(request, 'pages/edit_user.html', {'form1': UserEditForm(instance=user), 'form2':EducationForm(), 'form3':SkillForm(),'form4':JobForm()})
 
@@ -131,6 +133,7 @@ def add_Job(request):
         end_date = datetime.strptime(request.POST.get("end_date",""), '%Y-%m-%d')
         Job(user=user, company_name=company_name, role=role, location=location,
             description=description, start_date=start_date, end_date=end_date).save()
+    return render(request, 'pages/edit_user.html', {'form1': UserEditForm(instance=user), 'form2':EducationForm(), 'form3':SkillForm(),'form4':JobForm()})
 
 
 def editor(request):
@@ -208,3 +211,55 @@ def quickResume(request, user_id):
     response = HttpResponse(pdf_content,content_type='application/pdf')
     response['Content'] = 'attachment; filename="Resume.pdf"'
     return response
+
+
+def get_template_library(request):
+    jsonfile = open('ResumeBuilderApp/static/data/resume_templates.json', 'r')
+    resume_templates = json.load(jsonfile)
+    jsonfile.close()
+    return resume_templates
+
+
+def get_template(request, template_name):
+    templates = get_template_library(request)
+    for template in templates:
+        if template['name'] == template_name:
+            return template
+    return None
+
+
+def generate_resume(request, resume_template):
+    # get user data
+    user = request.user
+    education = Education.objects.filter(user=user)
+    skills = Skill.objects.filter(user=user)
+    jobs = Job.objects.filter(user=user)
+    user_data = {
+        'user': user,
+        'education': education,
+        'skills': skills,
+        'jobs': jobs
+    }
+    # reload templates to pull data from
+    resume_template_full = get_template(request, resume_template)
+    template_content = resume_template_full.get('content')
+    # render the template with Django
+    django_template = Template(template_content)
+    rendered_template = django_template.render(Context(user_data))
+    pdf_content = convert_to_pdf(rendered_template)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="resume.pdf"'
+    response.write(pdf_content)
+    return response
+
+
+def convert_to_pdf(template_content):
+    # PDF file buffer
+    result_file = BytesIO()
+    # PDF to HTML conversion
+    pisa.CreatePDF(template_content.encode('utf-8'), dest=result_file)
+    pdf_content = result_file.getvalue()
+    # Close buffer
+    result_file.close()
+    return pdf_content
+

@@ -7,6 +7,7 @@ version = "0.1.0"
 Django = "^5.0"
 python = "^3.10"
 git-python = "^1.0.3"
+xhtml2pdf = "^0.2.15"
 [tool.poetry.dev-dependencies]
 
 [tool.pyright]
