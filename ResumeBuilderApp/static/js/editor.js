@@ -36,10 +36,6 @@ function buttonSelection(event){
 
 // Event connections
 
-$(document).ready(function () {
-    $("#mainTextArea").html("");
-});
-
 $(".editorButton").mousedown(buttonSelection);
 
 $(document).on('keydown', '#mainTextArea', function(event){
@@ -54,7 +50,7 @@ $(document).on('keydown', '#mainTextArea', function(event){
 
 //gets html from div and adds it to a hidden input element
 document.getElementById('resume').addEventListener('submit', function() {
-    var content = document.getElementById('maintextarea').innerHTML;
+    var content = document.getElementById('mainTextArea').innerHTML;
     document.getElementById('data').value = content;
 });
 
