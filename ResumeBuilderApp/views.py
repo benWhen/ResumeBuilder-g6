@@ -190,7 +190,11 @@ def saveResume(request):
             resumeCount = Resume.objects.filter(user=user).count()
             resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_file=content)
         else:
-            resume = Resume(name=resumeName, user=user, resume_file=content)
+            resumeCount = Resume.objects.filter(name=resumeName).count()
+            if resumeCount == 0:
+                resume = Resume(name=resumeName, user=user, resume_file=content)
+            else:
+                resume = Resume(name=resumeName + "(" + str(resumeCount) + ")", user=user, resume_file=content)
             resume.save()
         if request.POST.get("chosen","") == "save":
             return render(request, 'pages/editor.html', {"currentContent": content})

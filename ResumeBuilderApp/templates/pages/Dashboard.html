@@ -45,7 +45,7 @@
                 <select name="resumeName">
                     <option value="">Resume select</option>
                     {% for resume in resumes %}
-                        <option value="{{ resume.name }}">{{ resume.name }}</option>
+                        <option value="{{ resume.name }}">{{ resume.name|safe }}</option>
                     {% endfor %}
                 </select>
                 <button type="submit" class="btn btn-primary">Load</button>
