@@ -170,6 +170,41 @@ def saveResume(request):
     else:
       return redirect('editor')
 
+def saveResume(request):
+    if request.method == 'POST':
+        content = request.POST.get('data', 'Hello World!')
+        resumeName = request.POST.get('resumeName', '')
+        print(resumeName)
+        #if we want to check resume contents for security reasons
+        #check if user is logged in
+        if not request.user.is_authenticated:
+            return redirect('login')
+        #retrieve user id from session and check if id is in session
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('login')
+        #saves resume to database
+        user = User.objects.get(id=user_id)
+        #creates a pdf based of resume content
+        if resumeName == '':
+            resumeCount = Resume.objects.filter(user=user).count()
+            resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_file=content)
+        else:
+            resume = Resume(name=resumeName, user=user, resume_file=content)
+            resume.save()
+        if request.POST.get("chosen","") == "save":
+            return render(request, 'pages/editor.html', {"currentContent": content})
+        #creates a pdf based of resume content
+        resumePDF = BytesIO()
+        pisa.CreatePDF(content, resumePDF)
+        response = HttpResponse(resumePDF.getvalue(),content_type='application/pdf')
+        response['Content'] = 'attachment; filename="Resume.pdf"'
+        resumePDF.close()
+        return response
+    else:
+        return redirect('editor')
+        
+
 def loadResume(request):
     print("loadResume")
     if request.method == 'POST':
