@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Education</h2>
+                        <div class="text-center d-flex flex-column align-items-center">
+                            <form action="{% url 'deleteEducation' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <select name="eduName">
+                                        <option value="">select education</option>
+                                        {% for edu in educations %}
+                                            <option value="{{edu.institution_name}}-{{edu.degree}}-{{edu.major}}"> {{edu.institution_name}}-{{edu.degree}}-{{edu.major}}</option>
+                                        {% endfor %}
+                                    </select><button type="submit" class="btn btn-primary">Delete Education</button>
+                                    <ul>
+                                        {% for edu in educations %}
+                                            <li>{{edu.institution_name}}-{{edu.degree}}-{{edu.major}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Skills</h2>
+                        <div class="text-center d-flex flex-column align-items-center">
+                            <form action="{% url 'deleteSkill' %}" method="post">
+                            {% csrf_token %}
+                                <div class="form-group">
+                                    <select name="skillName">
+                                        <option value="">select skill</option>
+                                        {% for skill in skills %}
+                                            <option value="{{skill.skill_name}}"> {{skill.skill_name}}</option>
+                                        {% endfor %}
+                                    </select><button type="submit" name="option" class="btn btn-primary" value="Add Skill"">Delete Skill</button>
+                                    <ul>
+                                        {% for skill in skills %}
+                                            <li>{{skill.skill_name}}-{{skill.description}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <br>
+                                </div>
+                            </form>
+                        </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Jobs</h2>
+                        <div class="text-center d-flex flex-column align-items-center">
+                            <form action="{% url 'deleteJob' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <select name="jobName">
+                                        <option value="">select job</option>
+                                        {% for job in jobs %}
+                                            <option value="{{job.company_name}}-{{job.role}}-{{job.location}}"> {{job.company_name}}-{{job.role}}-{{job.location}}</option>
+                                        {% endfor %}
+                                    </select><button type="submit" name="option" class="btn btn-primary" value="Add Experience"">Delete Job</button>
+                                    <ul>
+                                        {% for job in jobs %}
+                                            <li>{{job.company_name}}-{{job.role}}-{{job.location}}-{{job.description}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
