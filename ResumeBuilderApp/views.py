@@ -140,35 +140,47 @@ def editor(request):
     context = {}
     return render(request, 'pages/editor.html', context)
 
-  #function to save resume
 def saveResume(request):
     if request.method == 'POST':
-      content = request.POST.get('data', 'Hello World!')
-      #if we want to check resume contents for security reasons
-      #check if user is logged in
-      if not request.user.is_authenticated:
-        return redirect('login')
-      #retrieve user id from session and check if id is in session
-      user_id = request.session.get('user_id')
-      if not user_id:
-        return redirect('login')
-      #saves resume to database
-      user = User.objects.get(id=user_id)
-      #creates a pdf based of resume content
-      resumeCount = Resume.objects.filter(user=user).count()
-      resumePDF = BytesIO()
-      pisa.CreatePDF(content, resumePDF)
-      resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_file=content)
-      resume.save()
-      if request.POST.get("chosen","") == "save":
-          resumePDF.close()
-          return render(request, 'pages/editor.html', {"currentContent": content})
-      response = HttpResponse(resumePDF.getvalue(),content_type='application/pdf')
-      response['Content'] = 'attachment; filename="Resume.pdf"'
-      resumePDF.close()
-      return response
+        content = request.POST.get('data', 'Hello World!')
+        resumeName = request.POST.get('resumeName', '')
+        print(resumeName)
+        #if we want to check resume contents for security reasons
+        #check if user is logged in
+        if not request.user.is_authenticated:
+            return redirect('login')
+        #retrieve user id from session and check if id is in session
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('login')
+        #saves resume to database
+        user = User.objects.get(id=user_id)
+        #creates a pdf based of resume content
+        safe = ("<script>" in resumeName)
+        print(safe)
+        if resumeName == '' or safe != False:
+            resumeCount = Resume.objects.filter(user=user).count()
+            print(resumeCount)
+            resume = Resume(name= "Resume" + str(resumeCount), user=user, resume_file=content)
+        else:
+            resumeCount = Resume.objects.filter(name=resumeName).count()
+            if resumeCount == 0:
+                resume = Resume(name=resumeName, user=user, resume_file=content)
+            else:
+                resume = Resume(name=resumeName + "(" + str(resumeCount) + ")", user=user, resume_file=content)
+        resume.save()
+        if request.POST.get("chosen","") == "save":
+            return render(request, 'pages/editor.html', {"currentContent": content})
+        #creates a pdf based of resume content
+        resumePDF = BytesIO()
+        pisa.CreatePDF(content, resumePDF)
+        response = HttpResponse(resumePDF.getvalue(),content_type='application/pdf')
+        response['Content'] = 'attachment; filename="Resume.pdf"'
+        resumePDF.close()
+        return response
     else:
-      return redirect('editor')
+        return redirect('editor')
+        
 
 def loadResume(request):
     print("loadResume")
@@ -182,12 +194,14 @@ def loadResume(request):
         resumeName = request.POST.get('resumeName')
         if resumeName == "":
             resumes = Resume.objects.filter(user=request.user)
-            return render(request, 'pages/dashboard.html', {"resumes": resumes})
+            resume_templates = get_template_library(request)
+            return render(request, 'pages/Dashboard.html', {'resumes': resumes, 'resume_templates': resume_templates})
         resume = Resume.objects.get(name=resumeName, user=request.user)
         return render(request, 'pages/editor.html', {"currentContent": resume.resume_file})
     else:
         resumes = Resume.objects.filter(user=request.user)
-        return render(request, 'pages/dashboard.html', {"resumes": resumes})
+        resume_templates = get_template_library(request)
+        return render(request, 'pages/Dashboard.html', {'resumes': resumes, 'resume_templates': resume_templates})
 
 def quickResume(request, user_id):
     data = User.objects.get(id=user_id)
@@ -263,3 +277,105 @@ def convert_to_pdf(template_content):
     result_file.close()
     return pdf_content
 
+def DeleteResume(request):
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+        #retrieve user id from session and check if id is in session
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('login')
+        
+        resumeName = request.POST.get('resumeName')
+        resumes = Resume.objects.filter(user=request.user)
+        resume_templates = get_template_library(request)
+        if resumeName == "":
+            return render(request, 'pages/Dashboard.html', {'resumes': resumes, 'resume_templates': resume_templates})
+        resume = Resume.objects.get(name=resumeName, user=request.user)
+        resume.delete()
+        return render(request, 'pages/Dashboard.html', {'resumes': resumes, 'resume_templates': resume_templates})
+
+def deleteInfo(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    #retrieve user id from session and check if id is in session
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+    user = User.objects.get(id=user_id)
+    jobs = Job.objects.filter(user=user)
+    educations = Education.objects.filter(user=user)
+    skills = Skill.objects.filter(user=user)
+    return render(request, 'pages/deleteInfo.html', {"jobs": jobs,"educations": educations,"skills": skills})
+
+
+def deleteEducation(request):
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+        #retrieve user id from session and check if id is in session
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('login')
+        
+        user = User.objects.get(id=user_id)
+        
+        education = request.POST.get("eduName",'')
+        #checks if education is blank
+        if education:
+            education = education.split("-")
+
+            education = Education.objects.get(user=user, institution_name=education[0], degree=education[1], major=education[2])
+
+            education.delete()
+        jobs = Job.objects.filter(user=user)
+        educations = Education.objects.filter(user=user)
+        skills = Skill.objects.filter(user=user)
+        return render(request, 'pages/deleteInfo.html', {"jobs": jobs,"educations": educations,"skills": skills})
+        
+
+def deleteSkill(request):
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+        #retrieve user id from session and check if id is in session
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('login')
+        user = User.objects.get(id=user_id)
+        
+        skill = request.POST.get("skillName",'')
+        #checks if skill is blank
+        if skill:
+            skill = Skill.objects.get(user=user, skill_name=skill)
+
+            skill.delete()
+        
+        jobs = Job.objects.filter(user=user)
+        educations = Education.objects.filter(user=user)
+        skills = Skill.objects.filter(user=user)
+        return render(request, 'pages/deleteInfo.html', {"jobs": jobs,"educations": educations,"skills": skills})
+
+def deleteJob(request):
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+        #retrieve user id from session and check if id is in session
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('login')
+        user = User.objects.get(id=user_id)
+        
+        job = request.POST.get("jobName",'')
+        #checks if job is blank
+        if job:
+            job = job.split("-")
+
+            job = Job.objects.get(user=user, company_name=job[0], role=job[1], location=job[2])
+
+            job.delete()
+
+        jobs = Job.objects.filter(user=user)
+        educations = Education.objects.filter(user=user)
+        skills = Skill.objects.filter(user=user)
+        return render(request, 'pages/deleteInfo.html', {"jobs": jobs,"educations": educations,"skills": skills})

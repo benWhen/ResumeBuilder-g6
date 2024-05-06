@@ -29,6 +29,7 @@
                         <h5 class="card-title">Edit Profile</h5>
                         <p class="card-text">Update your personal information.</p>
                         <a href="{% url 'edit_user' user_id=user.id %}" class="btn btn-primary">Edit Account</a>
+                        <a href="{% url 'deleteInfo' %}" class="btn btn-primary">Delete Experience</a>
                     </div>
                 </div>
 
@@ -37,19 +38,28 @@
                         <h5 class="card-title">Edit Resume</h5>
                         <p class="card-text">Create a new resume or make changes to your current resume.</p>
                         <a href="{% url 'editor' %}" class="btn btn-primary">Resume Editor</a>
+                        <form action="{% url 'loadResume' %}" method="post">
+                            {% csrf_token %}
+                            <select name="resumeName">
+                                <option value="">Resume select</option>
+                                {% for resume in resumes %}
+                                    <option value="{{ resume.name }}">{{ resume.name|safe }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary">Load</button>
+                        </form>
+                        <form action="{% url 'DeleteResume' %}" method="post">
+                            {% csrf_token %}
+                            <select name="resumeName">
+                                <option value="">Resume select</option>
+                                {% for resume in resumes %}
+                                    <option value="{{ resume.name }}">{{ resume.name|safe }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary">Delete</button>
+                        </form>
                     </div>
                 </div>
-
-            <form action="{% url 'loadResume' %}" method="post">
-                {% csrf_token %}
-                <select name="resumeName">
-                    <option value="">Resume select</option>
-                    {% for resume in resumes %}
-                        <option value="{{ resume.name }}">{{ resume.name }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit" class="btn btn-primary">Load</button>
-            </form>
                 <a href="{% url 'quickResume' user_id=user.id %}" class="btn btn-danger">Make Resume</a>
                 <br><a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
 

@@ -16,6 +16,11 @@ urlpatterns = [
     path('add_Skill/', views.add_Skill, name='add_Skill'),
     path('add_Job/', views.add_Job, name='add_Job'),
     path('add_Education/', views.add_Education, name='add_Education'),
-    path('generate_resume/<str:resume_template>/', views.generate_resume, name='generate_resume')
+    path('generate_resume/<str:resume_template>/', views.generate_resume, name='generate_resume'),
+    path('DeleteResume/', views.DeleteResume, name='DeleteResume'),
+    path('deleteEducation/', views.deleteEducation, name='deleteEducation'),
+    path('deleteSkill/', views.deleteSkill, name='deleteSkill'),
+    path('deleteJob/', views.deleteJob, name='deleteJob'),
+    path('deleteInfo/', views.deleteInfo, name='deleteInfo'),
     ]
 #comment so I can re-push

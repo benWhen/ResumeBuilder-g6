@@ -42,16 +42,17 @@ $(document).on('keydown', '#mainTextArea', function(event){
 
     // Tab is keyCode 9
     if(event.keyCode == 9){
-        document.execCommand('insertHTML', false, '&#009');
-        event.preventDefault();
-        $('#mainTextArea').focus();
+                    document.execCommand('insertHTML', false, '&#009');
+                    event.preventDefault();
+                    $('#mainTextArea').focus();
     }
 });
 
-//gets html from div and adds it to a hidden input element
+//gets html from div and adds it to a hidden input element also prompts user for resume name
 document.getElementById('resume').addEventListener('submit', function() {
     var content = document.getElementById('mainTextArea').innerHTML;
     document.getElementById('data').value = content;
+    document.getElementById('resumeName').value = prompt("Enter a name for your resume(leave blank for default name): ");
 });
 
 // New page attempt and failure:
@@ -128,4 +129,3 @@ document.getElementById('resume').addEventListener('submit', function() {
 //         setCaretPosition(prevTextDiv, $(prevTextDiv).text().length);
 //     }
 // }
-

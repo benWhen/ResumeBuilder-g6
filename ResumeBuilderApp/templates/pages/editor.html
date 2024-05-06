@@ -64,6 +64,7 @@
             <form class="builderForm" id="resume" action= "{% url 'saveResume' %}" method="post">
                 {% csrf_token %}
                 <input name='data' id="data" type="text" hidden="hidden"/>
+                <input name='resumeName' id="resumeName" type="text" hidden="hidden"/>
                 <button class="formButton" id="save" name="chosen" value="save" type="submit" title="Save document"><i class="fa-solid fa-floppy-disk"></i></button>
                 <button class="formButton" id="export" name="chosen" value="export" type="submit" title="Export document"><i class="fa-solid fa-file-export"></i></button>
                 {# old buttons in case i messed something up #}
