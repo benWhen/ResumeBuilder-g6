@@ -247,6 +247,16 @@ def generate_resume(request, resume_template):
     django_template = Template(template_content)
     rendered_template = django_template.render(Context(user_data))
     pdf_content = convert_to_pdf(rendered_template)
+    # save resume to database
+    resume_count = Resume.objects.filter(user=user).count()
+    resume_name = f"Resume {resume_count + 1}"
+    resume_object = Resume(
+        name=resume_name,
+        user=user,
+        resume_file=rendered_template
+    )
+    resume_object.save()
+    # create resume
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="resume.pdf"'
     response.write(pdf_content)

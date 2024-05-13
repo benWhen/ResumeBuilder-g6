@@ -58,6 +58,7 @@ class Resume(models.Model):
 
 class ResumeTemplate(models.Model):
     name = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     preview_image = models.ImageField(upload_to='resume_templates', null=True, blank=True)
     content = models.TextField()
     date_created = models.DateField(auto_now_add=True)
