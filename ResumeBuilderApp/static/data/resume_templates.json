@@ -2,10 +2,15 @@
   {
     "name": "Template 1",
     "preview_image": "resume_templates/template1-thumb.jpg",
-    "content": "<html><body><h1>{{ user.first_name }} {{ user.last_name }}</h1><p>{{ user.email }} | {{ user.phone }}</p><h2>Education</h2{% for institution in education %}<h3>{{ institution.institution_name }}</h3><p>{{ institution.degree }} - {{ institution.major }}</p><p>{{ institution.start_date }} - {{ institution.end_date }}</p>{% endfor %}<h2>Work Experience</h2>{% for job in experience %}<h3>{{ job.company_name }} - {{ job.role }}</h3><p>{{ job.start_date }} - {{ job.end_date }}</p><p>{{ job.description }}</p>{% endfor %}<h2>Skills</h2><ul>{% for skill in skills %}<li>{{ skill.skill_name }} - {{ skill.description }}</li>{% endfor %}</ul></body></html>"
+    "content": "<div style=\"text-align: center;\">\n  <h1>{{ user.first_name }} {{ user.last_name }}</h1>\n  <p>{{ user.address }}</p> <p>{{ user.phone_number }}, {{ user.email }}</p>\n</div>\n\n<h2>Education</h2>\n{% for edu in education %}\n<div>\n  <p>{{ edu.institution_name }}</p>\n  <p>{{ edu.get_degree_display }} - {{ edu.major }}{% if edu.minor %}, {{ edu.minor }}{% endif %}</p>\n  <p>{{ edu.start_date|date:\"M d, Y\" }} - {{ edu.end_date|date:\"M d, Y\" }}</p>\n</div>\n{% endfor %}\n\n<h2>Work Experience</h2>\n{% for job in jobs %}\n<div>\n  <p>{{ job.company_name }} - {{ job.role }}</p>\n  <p>{{ job.location }}</p>\n  <p>{{ job.start_date|date:\"M d, Y\" }} - {{ job.end_date|date:\"M d, Y\" }}</p>\n  <ul>\n    <li>{{ job.description }}</li>\n  </ul>\n</div>\n{% endfor %}\n\n<h2>Skills</h2>\n{% for skill in skills %}\n<div>\n  <p>{{ skill.skill_name }}: {{ skill.description }}</p>\n</div>\n{% endfor %}"
   },
   {
     "name": "Template 2",
+    "preview_image": "resume_templates/template1-thumb.jpg",
+    "content": "<html><body><h1>{{ user.first_name }} {{ user.last_name }}</h1><p>{{ user.email }} | {{ user.phone }}</p><h2>Education</h2{% for institution in education %}<h3>{{ institution.institution_name }}</h3><p>{{ institution.degree }} - {{ institution.major }}</p><p>{{ institution.start_date }} - {{ institution.end_date }}</p>{% endfor %}<h2>Work Experience</h2>{% for job in experience %}<h3>{{ job.company_name }} - {{ job.role }}</h3><p>{{ job.start_date }} - {{ job.end_date }}</p><p>{{ job.description }}</p>{% endfor %}<h2>Skills</h2><ul>{% for skill in skills %}<li>{{ skill.skill_name }} - {{ skill.description }}</li>{% endfor %}</ul></body></html>"
+  },
+  {
+    "name": "Template 3",
     "preview_image": "resume_templates/template1-thumb.jpg",
     "content": "<html><body><h1>{{ user.first_name }} {{ user.last_name }}</h1><p>{{ user.email }}</p><h2>Education</h2>{% for edu in education %}<p>{{ edu.institution_name }} - {{ edu.degree }} ({{ edu.major }})</p>{% endfor %}<h2>Skills</h2>{% for skill in skills %}<p>{{ skill.skill_name }} - {{ skill.description }}</p>{% endfor %}<h2>Experience</h2>{% for job in jobs %}<p>{{ job.company_name }} - {{ job.role }}</p><p>{{ job.description }}</p>{% endfor %}</body></html>"
   }
